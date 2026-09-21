@@ -52,6 +52,10 @@ const fonts = {
     medium400: createFontStyle(1, 400, 150, -0.02),
     small400: createFontStyle(0.875, 400, 142, -0.0175),
   },
+  title: {
+    // Figma 텍스트 스타일 `Title/15` — Pretendard SemiBold 15 / 100% / 0
+    semiBold600: createFontStyle(0.9375, 600, 100, 0),
+  },
 };
 
 export const theme = {
