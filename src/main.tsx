@@ -30,10 +30,6 @@ const routes = createBrowserRouter([
             element: <SidebarLayout />,
             children: [
               {
-                path: 'userInput',
-                element: <UserInput />,
-              },
-              {
                 path: 'home',
                 element: <Home />,
               },
@@ -50,6 +46,10 @@ const routes = createBrowserRouter([
                 element: <Company />,
               },
             ],
+          },
+          {
+            path: 'userInput',
+            element: <UserInput />,
           },
           {
             path: ':companyId/:blogId',
