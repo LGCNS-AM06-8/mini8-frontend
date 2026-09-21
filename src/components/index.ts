@@ -1,4 +1,6 @@
 export { default as MenuItem } from '@/components/MenuItem/MenuItem';
+export { default as AiGuideDrawer } from '@/components/AiGuideDrawer/AiGuideDrawer';
+export { default as TocRow } from '@/components/TocRow/TocRow';
 export { Button } from './button';
 export type { ButtonProps, ButtonVariant } from './button';
 export { Hashtag } from './hashtag';
