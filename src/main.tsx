@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '@/styles/global';
 import { theme } from '@/styles/theme';
 import { Blog, Company, Fav, Home, Landing, Login, MyPage, UserInput } from '@/pages';
-import Layout, { ProtectedRoute } from '@/layout';
+import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
 
 const routes = createBrowserRouter([
   {
@@ -27,24 +27,29 @@ const routes = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
+            element: <SidebarLayout />,
+            children: [
+              {
+                path: 'home',
+                element: <Home />,
+              },
+              {
+                path: 'fav',
+                element: <Fav />,
+              },
+              {
+                path: 'myPage',
+                element: <MyPage />,
+              },
+              {
+                path: ':companyId',
+                element: <Company />,
+              },
+            ],
+          },
+          {
             path: 'userInput',
             element: <UserInput />,
-          },
-          {
-            path: 'home',
-            element: <Home />,
-          },
-          {
-            path: 'fav',
-            element: <Fav />,
-          },
-          {
-            path: 'myPage',
-            element: <MyPage />,
-          },
-          {
-            path: ':companyId',
-            element: <Company />,
           },
           {
             path: ':companyId/:blogId',
