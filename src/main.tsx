@@ -6,8 +6,6 @@ import { theme } from '@/styles/theme';
 import { Blog, Company, Fav, Home, Landing, Login, MyPage, UserInput } from '@/pages';
 import Layout, { ProtectedRoute } from '@/layout';
 
-// ê²½ë¡œ 8ê°?. /landing ê³? /login ë§? ê³µê°œ, /userInput ?´?›„?Š” ? „ë¶? ë³´í˜¸ ê²½ë¡œ?‹¤. (F0a)
-// :companyId ?Š” /home Â· /fav ê°™ì?? ê³ ì • ê²½ë¡œë³´ë‹¤ ?’¤?— ë§¤ì¹­?œ?‹¤ (react-router ê°? ê³ ì • ê²½ë¡œë¥? ?š°?„ ?•œ?‹¤).
 const routes = createBrowserRouter([
   {
     path: '/',

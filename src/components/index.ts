@@ -1,3 +1,4 @@
+export { default as MenuItem } from '@/components/MenuItem/MenuItem';
 export { Button } from './button';
 export type { ButtonProps, ButtonVariant } from './button';
 export { Hashtag } from './hashtag';
