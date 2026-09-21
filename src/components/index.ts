@@ -7,3 +7,5 @@ export { Tag } from './tag';
 export type { TagProps, TagVariant } from './tag';
 export { CompanyListCard } from './company-list-card';
 export type { CompanyListCardProps } from './company-list-card';
+export { SearchInput } from './search-input';
+export type { SearchInputProps } from './search-input';
