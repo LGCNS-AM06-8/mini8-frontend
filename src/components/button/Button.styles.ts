@@ -25,22 +25,20 @@ const variantStyle = {
     }
   `,
 
-  // primary 와 같은 보라인데 글씨만 작다 (font-size/lg)
+  // 되돌릴 수 없는 확인 액션용 (나가기 등)
   warning: css`
     padding: 0.75rem 1.25rem;
     border-radius: 0.75rem;
     background-color: ${({ theme }) => theme.colors.violet.vt500};
     color: ${({ theme }) => theme.colors.grayScale.white};
-    font-size: 0.8125rem;
   `,
 
-  // 카드 안에서 쓰는 작은 강조 버튼. TODO: 11.5px 이 Figma 변수에 연결돼 있지 않음
+  // 카드 안에서 쓰는 연보라 강조 버튼 (AI 가이드 보기 등)
   soft: css`
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    background-color: ${({ theme }) => theme.colors.grayScale.gy100};
+    background-color: ${({ theme }) => theme.colors.violet.vt200};
     color: ${({ theme }) => theme.colors.violet.vt500};
-    font-size: 0.7188rem;
   `,
 } satisfies Record<ButtonVariant, ReturnType<typeof css>>;
 
@@ -52,7 +50,7 @@ export const Button = styled.button<{ $variant: ButtonVariant }>`
   white-space: nowrap;
   word-break: break-word;
 
-  ${({ theme }) => theme.fonts.title.semiBold600};
+  ${({ theme }) => theme.fonts.body.medium400};
   ${({ $variant }) => variantStyle[$variant]};
 
   /* Figma 는 primary/secondary 에만 정의돼 있지만 네 변형에 모두 적용한다 */

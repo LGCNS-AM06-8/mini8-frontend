@@ -48,13 +48,9 @@ const fonts = {
     h3: createFontStyle(1.25, 700, 142, -0.025),
   },
   body: {
-    large400: createFontStyle(1.125, 400, 154, -0.0225),
-    medium400: createFontStyle(1, 400, 150, -0.02),
-    small400: createFontStyle(0.875, 400, 142, -0.0175),
-  },
-  title: {
-    // Figma 텍스트 스타일 `Title/15` — Pretendard SemiBold 15 / 100% / 0
-    semiBold600: createFontStyle(0.9375, 600, 100, 0),
+    large400: createFontStyle(1.125, 500, 154, -0.0225),
+    medium400: createFontStyle(1, 500, 150, -0.02),
+    small400: createFontStyle(0.875, 500, 142, -0.0175),
   },
 };
 
