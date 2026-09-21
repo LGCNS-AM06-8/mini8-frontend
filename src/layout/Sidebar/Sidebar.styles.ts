@@ -5,9 +5,12 @@ export const Container = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
   gap: 0.25rem;
   width: 11.25rem;
-  height: 100%;
+  height: 100vh;
   padding: 1.375rem 0.875rem 1.25rem;
   background-color: ${({ theme }) => theme.colors.violet.vt000};
 `;
