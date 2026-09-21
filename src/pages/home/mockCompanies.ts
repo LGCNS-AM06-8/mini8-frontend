@@ -1,0 +1,103 @@
+import type { CompanySummary } from '@/types/company';
+
+// F4 목데이터. 숫자는 예시이고, 실제 API 연동 전까지 화면 구조 확인용.
+// 이름 · 관심 기술은 원래 로그인 응답과 GET /api/profile 에서 온다.
+export const mockUser = {
+  name: '000',
+  wantSkills: ['Kafka', 'Redis'],
+};
+
+// 서버가 정렬해서 내려주므로 화면은 이 순서대로 그린다.
+export const mockCompanies: CompanySummary[] = [
+  {
+    companyId: 1,
+    name: '우아한형제들',
+    summary: '배달의민족을 만드는 회사',
+    matchedSkillCount: 2,
+    totalSkillCount: 2,
+    matchedPostCount: 51,
+    totalPostCount: 528,
+    matchedSkills: [
+      { name: 'Redis', postCount: 32 },
+      { name: 'Kafka', postCount: 19 },
+    ],
+    recommended: true,
+  },
+  {
+    companyId: 2,
+    name: '토스',
+    summary: '금융을 쉽고 간편하게',
+    matchedSkillCount: 1,
+    totalSkillCount: 2,
+    matchedPostCount: 2,
+    totalPostCount: 20,
+    matchedSkills: [{ name: 'Redis', postCount: 2 }],
+    recommended: false,
+  },
+  {
+    companyId: 3,
+    name: 'LY(라인)',
+    summary: '메신저 LINE 을 만드는 회사',
+    matchedSkillCount: 1,
+    totalSkillCount: 2,
+    matchedPostCount: 8,
+    totalPostCount: 140,
+    matchedSkills: [{ name: 'Kafka', postCount: 8 }],
+    recommended: false,
+  },
+  {
+    companyId: 4,
+    name: '컬리',
+    summary: '새벽배송 마켓컬리',
+    matchedSkillCount: 1,
+    totalSkillCount: 2,
+    matchedPostCount: 4,
+    totalPostCount: 60,
+    matchedSkills: [{ name: 'Kafka', postCount: 4 }],
+    recommended: false,
+  },
+  {
+    companyId: 5,
+    name: '네이버 D2',
+    summary: '네이버 개발자 블로그',
+    matchedSkillCount: 1,
+    totalSkillCount: 2,
+    matchedPostCount: 3,
+    totalPostCount: 90,
+    matchedSkills: [{ name: 'Redis', postCount: 3 }],
+    recommended: false,
+  },
+  {
+    companyId: 6,
+    name: 'SK플래닛',
+    summary: 'OK캐쉬백 · 시럽을 만드는 회사',
+    matchedSkillCount: 1,
+    totalSkillCount: 2,
+    matchedPostCount: 1,
+    totalPostCount: 30,
+    matchedSkills: [{ name: 'Kafka', postCount: 1 }],
+    recommended: false,
+  },
+  {
+    companyId: 7,
+    name: '올리브영',
+    summary: '헬스 · 뷰티 스토어',
+    matchedSkillCount: 0,
+    totalSkillCount: 2,
+    matchedPostCount: 0,
+    totalPostCount: 25,
+    matchedSkills: [],
+    recommended: false,
+  },
+  {
+    companyId: 8,
+    name: '인프랩',
+    summary: '개발자 강의 플랫폼 인프런',
+    matchedSkillCount: 0,
+    totalSkillCount: 2,
+    matchedPostCount: 0,
+    totalPostCount: 15,
+    matchedSkills: [],
+    recommended: false,
+  },
+];

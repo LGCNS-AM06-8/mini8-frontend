@@ -5,3 +5,5 @@ export { Hashtag } from './hashtag';
 export type { HashtagProps, HashtagVariant } from './hashtag';
 export { Tag } from './tag';
 export type { TagProps, TagVariant } from './tag';
+export { CompanyListCard } from './company-list-card';
+export type { CompanyListCardProps } from './company-list-card';
