@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variable files
+# This file contains sensitive information like API keys and credentials
+# Should be kept out of version control for security reasons
+.env

@@ -1,32 +1,64 @@
-# React + TypeScript + Vite
+# mini8-frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## 빌드 및 실행
+```
+  yarn install   // install package dependencies
+  yarn run dev   // Start the dev server
+  yarn build     // Build your product
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Dependencies
+
+<div align="center">
+
+<img alt="NodeJS" src ="https://img.shields.io/badge/Node.js-v23.0.0-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
+<img alt="Yarn" src="https://img.shields.io/badge/Yarn-v1.22.22-2C8EBB?style=for-the-badge&logo=Yarn&logoColor=white"/>
+<img alt="React" src="https://img.shields.io/badge/React-v19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
+<img alt="React" src="https://img.shields.io/badge/Typescript-v~5.7.2-3178C6?style=for-the-badge&logo=Typescript&logoColor=white"/>
+
+</div>
+
+## Pull-request
+```
+🔥 PR 제목  
+
+📌 작업 내용  
+
+✅ 체크리스트  
+- [ ] 코드가 정상적으로 동작하는지 테스트 완료  
+- [ ] 필요한 경우 문서를 업데이트했는지 확인  
+- [ ] 코드 리뷰어가 이해할 수 있도록 설명을 추가했는지 확인  
+
+📸 스크린샷 (선택)  
+
+🚀 테스트 방법  
+
+💡 추가 논의할 사항  
+
+🙏 리뷰어에게 한마디
+
+```
+
+## Commit convention
+```
+feat: 새로운 기능 추가
+
+fix: 버그 수정
+
+docs: 문서 수정
+
+style: 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+
+refactor: 코드 리팩토링
+
+test: 테스트 코드, 리팩토링 테스트 코드 추가
+
+chore: 빌드 업무 수정, 패키지 매니저 수정, production code와 무관한 부분들
+
+comment: 주석 추가 및 변경
+
+remove: 파일, 폴더 삭제
+
+rename: 파일, 폴더명 수정
+
+```
