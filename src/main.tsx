@@ -3,7 +3,17 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '@/styles/global';
 import { theme } from '@/styles/theme';
-import { Blog, Company, Fav, Home, Landing, Login, MyPage, UserInput } from '@/pages';
+import {
+  Blog,
+  Company,
+  Fav,
+  GoogleCallback,
+  Home,
+  Landing,
+  Login,
+  MyPage,
+  UserInput,
+} from '@/pages';
 import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
 
 const routes = createBrowserRouter([
@@ -22,6 +32,10 @@ const routes = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'google/callback',
+        element: <GoogleCallback />,
       },
       {
         element: <ProtectedRoute />,

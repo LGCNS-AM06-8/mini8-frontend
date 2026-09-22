@@ -2,6 +2,8 @@
 export const PATHS = {
   LANDING: '/landing',
   LOGIN: '/login',
+  // 구글 로그인이 access token 을 붙여 돌려보내는 주소. 구글 콘솔의 「승인된 리디렉션」과 같아야 한다.
+  GOOGLE_CALLBACK: '/google/callback',
   USER_INPUT: '/userInput',
   HOME: '/home',
   COMPANY: '/:companyId',
