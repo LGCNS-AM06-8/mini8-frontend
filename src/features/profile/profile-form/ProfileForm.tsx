@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState, type FormEvent } from 'react';
 
 import { Tag } from '@/components';
-import type { ApiError } from '@/lib';
+import { showErrorToast, type ApiError } from '@/lib';
 import type { JobField } from '@/types/profile';
 
 import { JOB_FIELD_OPTIONS, WANT_SKILL_MAX } from '../constants';
@@ -51,7 +51,6 @@ export default function ProfileForm({
     wantSkillIds: initialValues?.wantSkillIds ?? [],
   });
   const [errors, setErrors] = useState<ProfileErrors>({});
-  const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [modalTarget, setModalTarget] = useState<SkillField | null>(null);
   const fieldRefs = useRef<Partial<Record<ProfileField, HTMLDivElement | null>>>({});
@@ -82,7 +81,6 @@ export default function ProfileForm({
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (submitting) return;
-    setFormError(null);
 
     const nextErrors = validate(values);
     const firstError = FIELD_ORDER.find((field) => nextErrors[field]);
@@ -102,7 +100,8 @@ export default function ProfileForm({
         setErrors({ [field]: message });
         moveTo(field as ProfileField);
       } else {
-        setFormError(message);
+        // 가리킨 칸이 없는 오류(서버 오류 등)는 토스트로 알린다 (F9)
+        showErrorToast(error as ApiError);
       }
     } finally {
       setSubmitting(false);
@@ -164,9 +163,8 @@ export default function ProfileForm({
       {renderSkillField('haveSkillIds')}
       {renderSkillField('wantSkillIds')}
 
-      {formError && <S.ErrorText role="alert">{formError}</S.ErrorText>}
-      <S.SubmitButton type="submit" disabled={submitting}>
-        {submitting ? '저장하는 중…' : submitLabel}
+      <S.SubmitButton type="submit" loading={submitting}>
+        {submitLabel}
       </S.SubmitButton>
 
       {modalTarget && (
