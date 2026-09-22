@@ -19,3 +19,5 @@ export { BookmarkButton } from './bookmark-button';
 export type { BookmarkButtonProps } from './bookmark-button';
 export { ArticleCard } from './article-card';
 export type { ArticleCardPost, ArticleCardProps } from './article-card';
+export { GradientCard } from './gradient-card';
+export type { GradientCardProps } from './gradient-card';
