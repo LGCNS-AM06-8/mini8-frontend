@@ -43,6 +43,7 @@ const variantStyle = {
 } satisfies Record<ButtonVariant, ReturnType<typeof css>>;
 
 export const Button = styled.button<{ $variant: ButtonVariant }>`
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -53,10 +54,26 @@ export const Button = styled.button<{ $variant: ButtonVariant }>`
   ${({ theme }) => theme.fonts.body.medium400};
   ${({ $variant }) => variantStyle[$variant]};
 
-  /* Figma 는 primary/secondary 에만 정의돼 있지만 네 변형에 모두 적용한다 */
-  &:disabled {
+  /* Figma 는 primary/secondary 에만 정의돼 있지만 네 변형에 모두 적용한다. 요청 중(aria-busy)은 제외 */
+  &:disabled:not([aria-busy]) {
     background-color: ${({ theme }) => theme.colors.grayScale.gy100};
     color: ${({ theme }) => theme.colors.grayScale.gy300};
     cursor: not-allowed;
   }
+
+  &[aria-busy] {
+    cursor: progress;
+  }
+`;
+
+export const Label = styled.span<{ $hidden: boolean }>`
+  visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
+`;
+
+export const Loading = styled.span`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

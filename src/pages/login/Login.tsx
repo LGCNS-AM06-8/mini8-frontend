@@ -34,7 +34,7 @@ export default function Login() {
           기술블로그 읽기 가이드예요
         </S.Title>
         <S.Subtitle>내 수준에 맞게 어떤 글을 어떻게 읽을지 알려드려요</S.Subtitle>
-        <Button onClick={handleLogin} disabled={isRedirecting}>
+        <Button onClick={handleLogin} loading={isRedirecting}>
           Google로 3초 만에 시작하기
         </Button>
         {error && <S.ErrorText role="alert">{error}</S.ErrorText>}

@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '@/styles/global';
@@ -15,6 +16,7 @@ import {
   UserInput,
 } from '@/pages';
 import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
+import { toasterProps } from '@/lib';
 
 const routes = createBrowserRouter([
   {
@@ -80,6 +82,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <RouterProvider router={routes} />
+      <Toaster {...toasterProps} />
     </ThemeProvider>
   </>,
 );
