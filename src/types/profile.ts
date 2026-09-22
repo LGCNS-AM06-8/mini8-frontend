@@ -18,3 +18,18 @@ export interface ProfileRequest {
   haveSkillIds: number[];
   wantSkillIds: number[];
 }
+
+// GET /api/profile (07 마이페이지 조회). careerYears 가 null 이면 아직 입력하지 않은 것
+export interface ProfileSkill {
+  techTagId: number;
+  name: string;
+}
+
+export interface ProfileResponse {
+  name: string;
+  jobFields: JobField[];
+  careerYears: number | null;
+  haveSkills: ProfileSkill[];
+  wantSkills: ProfileSkill[];
+  profileVersion: number;
+}

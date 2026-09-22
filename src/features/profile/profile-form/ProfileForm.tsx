@@ -1,13 +1,19 @@
 import { useCallback, useRef, useState, type FormEvent } from 'react';
 
-import { Tag } from '@/components';
-import { showErrorToast, type ApiError } from '@/lib';
+import { Button, Tag } from '@/components';
+import { showErrorToast, toast, type ApiError } from '@/lib';
 import type { JobField } from '@/types/profile';
 
 import { JOB_FIELD_OPTIONS, WANT_SKILL_MAX } from '../constants';
 import TechSelectModal from '../tech-select-modal/TechSelectModal';
 import * as S from './ProfileForm.styles';
-import type { ProfileErrors, ProfileField, ProfileFormProps } from './ProfileForm.types';
+import type {
+  ProfileErrors,
+  ProfileField,
+  ProfileFormInitialValues,
+  ProfileFormProps,
+  ProfileFormVariant,
+} from './ProfileForm.types';
 
 type SkillField = 'haveSkillIds' | 'wantSkillIds';
 
@@ -16,8 +22,11 @@ const SKILL_LABELS: Record<SkillField, string> = {
   wantSkillIds: '더 알아보고 싶은 기술',
 };
 
-// 화면에 보이는 순서. 오류가 여러 개면 가장 위 칸으로 이동한다
-const FIELD_ORDER: ProfileField[] = ['jobFields', 'careerYears', 'haveSkillIds', 'wantSkillIds'];
+// 화면에 보이는 순서. 오류가 여러 개면 가장 위 칸으로 이동한다 (마이페이지는 경력이 이름 옆 첫 줄)
+const FIELD_ORDER: Record<ProfileFormVariant, ProfileField[]> = {
+  onboarding: ['jobFields', 'careerYears', 'haveSkillIds', 'wantSkillIds'],
+  settings: ['careerYears', 'jobFields', 'haveSkillIds', 'wantSkillIds'],
+};
 
 interface FormValues {
   jobFields: JobField[];
@@ -38,22 +47,30 @@ const validate = (values: FormValues): ProfileErrors => {
   return errors;
 };
 
+const toFormValues = (initialValues?: ProfileFormInitialValues): FormValues => ({
+  jobFields: initialValues?.jobFields ?? [],
+  careerYears: initialValues?.careerYears == null ? '' : String(initialValues.careerYears),
+  haveSkillIds: initialValues?.haveSkillIds ?? [],
+  wantSkillIds: initialValues?.wantSkillIds ?? [],
+});
+
 export default function ProfileForm({
   techTags,
   initialValues,
   submitLabel,
+  variant = 'onboarding',
+  name,
   onSubmit,
 }: ProfileFormProps) {
-  const [values, setValues] = useState<FormValues>({
-    jobFields: initialValues?.jobFields ?? [],
-    careerYears: initialValues ? String(initialValues.careerYears) : '',
-    haveSkillIds: initialValues?.haveSkillIds ?? [],
-    wantSkillIds: initialValues?.wantSkillIds ?? [],
-  });
+  const [values, setValues] = useState<FormValues>(() => toFormValues(initialValues));
+  // 취소하면 돌아갈 값. 저장에 성공하면 저장한 값으로 바뀐다
+  const [savedValues, setSavedValues] = useState<FormValues>(values);
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [modalTarget, setModalTarget] = useState<SkillField | null>(null);
   const fieldRefs = useRef<Partial<Record<ProfileField, HTMLDivElement | null>>>({});
+  const fieldOrder = FIELD_ORDER[variant];
+  const isDirty = JSON.stringify(values) !== JSON.stringify(savedValues);
 
   const tagName = (id: number) => techTags.find((tag) => tag.techTagId === id)?.name ?? '';
 
@@ -78,12 +95,22 @@ export default function ProfileForm({
 
   const closeModal = useCallback(() => setModalTarget(null), []);
 
+  const handleCancel = () => {
+    setValues(savedValues);
+    setErrors({});
+  };
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (submitting) return;
+    // 값이 같아도 저장하면 서버가 profileVersion 을 올려 AI 가이드를 다시 만들게 되므로 부르지 않는다
+    if (variant === 'settings' && !isDirty) {
+      toast('바뀐 내용이 없어요', { id: 'profile-not-changed' });
+      return;
+    }
 
     const nextErrors = validate(values);
-    const firstError = FIELD_ORDER.find((field) => nextErrors[field]);
+    const firstError = fieldOrder.find((field) => nextErrors[field]);
     setErrors(nextErrors);
     if (firstError) {
       moveTo(firstError);
@@ -93,10 +120,11 @@ export default function ProfileForm({
     setSubmitting(true);
     try {
       await onSubmit({ ...values, careerYears: Number(values.careerYears) });
+      setSavedValues(values);
     } catch (error) {
       // 입력값은 그대로 두고, 서버가 가리킨 칸이 있으면 그 칸에 오류를 띄운다
       const { field, message } = error as ApiError;
-      if (field && FIELD_ORDER.includes(field as ProfileField)) {
+      if (field && fieldOrder.includes(field as ProfileField)) {
         setErrors({ [field]: message });
         moveTo(field as ProfileField);
       } else {
@@ -130,42 +158,74 @@ export default function ProfileForm({
     </S.Field>
   );
 
+  const jobField = (
+    <S.Field ref={(element) => void (fieldRefs.current.jobFields = element)}>
+      <S.Label as="p">희망 직무</S.Label>
+      <S.Chips>
+        {JOB_FIELD_OPTIONS.map(({ value, label }) => (
+          <Tag
+            key={value}
+            selected={values.jobFields.includes(value)}
+            onClick={() => toggleJobField(value)}
+          >
+            {label}
+          </Tag>
+        ))}
+      </S.Chips>
+      {errors.jobFields && <S.ErrorText role="alert">{errors.jobFields}</S.ErrorText>}
+    </S.Field>
+  );
+
+  const careerField = (
+    <S.Field ref={(element) => void (fieldRefs.current.careerYears = element)}>
+      <S.Label htmlFor="careerYears">경력 년수</S.Label>
+      <S.CareerInput
+        id="careerYears"
+        inputMode="numeric"
+        placeholder="0 (신입)"
+        value={values.careerYears}
+        onChange={(event) => update('careerYears', () => event.target.value.replace(/\D/g, ''))}
+      />
+      {errors.careerYears && <S.ErrorText role="alert">{errors.careerYears}</S.ErrorText>}
+    </S.Field>
+  );
+
   return (
-    <S.Form onSubmit={handleSubmit} noValidate>
-      <S.Field ref={(element) => void (fieldRefs.current.jobFields = element)}>
-        <S.Label as="p">희망 직무</S.Label>
-        <S.Chips>
-          {JOB_FIELD_OPTIONS.map(({ value, label }) => (
-            <Tag
-              key={value}
-              selected={values.jobFields.includes(value)}
-              onClick={() => toggleJobField(value)}
-            >
-              {label}
-            </Tag>
-          ))}
-        </S.Chips>
-        {errors.jobFields && <S.ErrorText role="alert">{errors.jobFields}</S.ErrorText>}
-      </S.Field>
-
-      <S.Field ref={(element) => void (fieldRefs.current.careerYears = element)}>
-        <S.Label htmlFor="careerYears">경력 년수</S.Label>
-        <S.CareerInput
-          id="careerYears"
-          inputMode="numeric"
-          placeholder="0 (신입)"
-          value={values.careerYears}
-          onChange={(event) => update('careerYears', () => event.target.value.replace(/\D/g, ''))}
-        />
-        {errors.careerYears && <S.ErrorText role="alert">{errors.careerYears}</S.ErrorText>}
-      </S.Field>
-
-      {renderSkillField('haveSkillIds')}
-      {renderSkillField('wantSkillIds')}
-
-      <S.SubmitButton type="submit" loading={submitting}>
-        {submitLabel}
-      </S.SubmitButton>
+    <S.Form onSubmit={handleSubmit} noValidate $variant={variant}>
+      {variant === 'settings' ? (
+        <>
+          <S.Card>
+            <S.Row>
+              <S.NameField>
+                <S.Label as="p">이름</S.Label>
+                <S.ReadOnlyBox>{name}</S.ReadOnlyBox>
+              </S.NameField>
+              {careerField}
+            </S.Row>
+            {jobField}
+            {renderSkillField('haveSkillIds')}
+            {renderSkillField('wantSkillIds')}
+          </S.Card>
+          <S.Actions>
+            <Button type="submit" loading={submitting}>
+              {submitLabel}
+            </Button>
+            <Button variant="secondary" onClick={handleCancel} disabled={submitting}>
+              취소
+            </Button>
+          </S.Actions>
+        </>
+      ) : (
+        <>
+          {jobField}
+          {careerField}
+          {renderSkillField('haveSkillIds')}
+          {renderSkillField('wantSkillIds')}
+          <S.SubmitButton type="submit" loading={submitting}>
+            {submitLabel}
+          </S.SubmitButton>
+        </>
+      )}
 
       {modalTarget && (
         <TechSelectModal

@@ -23,6 +23,9 @@ export const toasterProps: ToasterProps = {
       fontWeight: 500,
       wordBreak: 'keep-all',
     },
+    success: {
+      iconTheme: { primary: colors.violet.vt500, secondary: colors.grayScale.white },
+    },
     error: {
       iconTheme: { primary: colors.violet.vt500, secondary: colors.grayScale.white },
     },
