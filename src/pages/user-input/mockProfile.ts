@@ -1,5 +1,4 @@
 import type { ApiError } from '@/lib';
-import { markMockProfileCompleted } from '@/services/auth';
 import type { ProfileRequest } from '@/types/profile';
 
 // POST /api/profile 목업. 서버 거절 흐름을 확인할 수 있게 경력 50년 초과는 INVALID_INPUT 으로 돌려준다.
@@ -16,7 +15,6 @@ export const mockSaveProfile = (request: ProfileRequest) =>
         return;
       }
       console.info('[mock] POST /api/profile', request);
-      markMockProfileCompleted();
       resolve();
     }, 600);
   });
