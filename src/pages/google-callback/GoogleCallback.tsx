@@ -30,8 +30,6 @@ export default function GoogleCallback() {
       fail();
       return;
     }
-    // 작업1 완료 기준(구글 access token 을 콘솔에 찍는다) 확인용. 실제 서버를 붙일 때 지운다.
-    console.info('[google] access token', googleAccessToken);
 
     loginWithGoogle(googleAccessToken)
       .then(({ accessToken, refreshToken, profileCompleted }) => {
