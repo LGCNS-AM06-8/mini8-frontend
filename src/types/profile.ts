@@ -5,7 +5,6 @@ export interface TechTag {
   techTagId: number;
   name: string;
   field: JobField;
-  postCount: number;
 }
 
 export interface TechTagsResponse {
