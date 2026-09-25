@@ -1,28 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { StateNotice } from '@/components';
-import { mockTechTags, ProfileForm } from '@/features/profile';
+import { ProfileForm } from '@/features/profile';
 import { toast, type ApiError } from '@/lib';
-import type { ProfileRequest, ProfileResponse } from '@/types/profile';
+import { getProfile } from '@/services/profile';
+import { getTechTags } from '@/services/techTags';
+import type { ProfileRequest, ProfileResponse, TechTag } from '@/types/profile';
 
-import { mockGetProfile, mockUpdateProfile } from './mockMyProfile';
+import { mockUpdateProfile } from './mockMyProfile';
 import * as S from './MyPage.styles';
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'done'; profile: ProfileResponse };
+  | { status: 'done'; profile: ProfileResponse; techTags: TechTag[] };
 
-const techTagName = (id: number) => mockTechTags.find((tag) => tag.techTagId === id)?.name ?? '';
-
-// 마이페이지 (F8). API 연동 전이라 조회 · 저장 · 기술 목록은 목업이다.
+// 마이페이지 (F8). 내 정보 · 기술 목록은 서버에서 받고, 저장은 PUT /api/profile 이 생길 때까지 목업이다.
 export default function MyPage() {
   const [state, setState] = useState<LoadState>({ status: 'loading' });
 
   const load = useCallback(() => {
     setState({ status: 'loading' });
-    mockGetProfile()
-      .then((profile) => setState({ status: 'done', profile }))
+    Promise.all([getProfile(), getTechTags()])
+      .then(([profile, techTags]) => setState({ status: 'done', profile, techTags }))
       .catch((error: ApiError) => setState({ status: 'error', message: error.message }));
   }, []);
 
@@ -31,7 +31,7 @@ export default function MyPage() {
   }, [load]);
 
   const handleSubmit = async (request: ProfileRequest) => {
-    await mockUpdateProfile(request, techTagName);
+    await mockUpdateProfile(request);
     toast.success('내 정보를 저장했어요');
   };
 
@@ -49,12 +49,12 @@ export default function MyPage() {
         />
       );
 
-    const { profile } = state;
+    const { profile, techTags } = state;
     return (
       <ProfileForm
         variant="settings"
         name={profile.name}
-        techTags={mockTechTags}
+        techTags={techTags}
         initialValues={{
           jobFields: profile.jobFields,
           careerYears: profile.careerYears,
