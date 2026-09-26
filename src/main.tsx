@@ -1,10 +1,22 @@
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '@/styles/global';
 import { theme } from '@/styles/theme';
-import { Blog, Company, Fav, Home, Landing, Login, MyPage, UserInput } from '@/pages';
+import {
+  Blog,
+  Company,
+  Fav,
+  GoogleCallback,
+  Home,
+  Landing,
+  Login,
+  MyPage,
+  UserInput,
+} from '@/pages';
 import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
+import { toasterProps } from '@/lib';
 
 const routes = createBrowserRouter([
   {
@@ -22,6 +34,10 @@ const routes = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'google/callback',
+        element: <GoogleCallback />,
       },
       {
         element: <ProtectedRoute />,
@@ -66,6 +82,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <RouterProvider router={routes} />
+      <Toaster {...toasterProps} />
     </ThemeProvider>
   </>,
 );
