@@ -18,6 +18,7 @@ import {
 } from '@/pages';
 import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
 import { toasterProps } from '@/lib';
+import { ResponsiveGate } from '@/components';
 
 const routes = createBrowserRouter([
   {
@@ -86,7 +87,9 @@ createRoot(document.getElementById('root')!).render(
   <>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <RouterProvider router={routes} />
+      <ResponsiveGate>
+        <RouterProvider router={routes} />
+      </ResponsiveGate>
       <Toaster {...toasterProps} />
     </ThemeProvider>
   </>,
