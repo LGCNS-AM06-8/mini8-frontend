@@ -1,0 +1,117 @@
+import styled from 'styled-components';
+
+import CloseIcon from '@/assets/icons/close.svg?react';
+
+export const Overlay = styled.button`
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background-color: rgb(0 0 0 / 40%);
+  cursor: default;
+`;
+
+export const Drawer = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5625rem;
+  width: 33.4375rem;
+  height: 100vh;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: ${({ theme }) => theme.colors.violet.vt000};
+  box-shadow: -6px 0 32px 0 rgb(0 0 0 / 16%);
+`;
+
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const Title = styled.h2`
+  ${({ theme }) => theme.fonts.header.h2};
+  color: ${({ theme }) => theme.colors.grayScale.black};
+`;
+
+export const CloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  cursor: pointer;
+`;
+
+export const CloseIconGlyph = styled(CloseIcon)`
+  width: 0.6875rem;
+  height: 0.6875rem;
+`;
+
+export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.colors.grayScale.gy100};
+  border-radius: 0.75rem;
+`;
+
+export const CardSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.125rem;
+
+  & + & {
+    border-top: 1px solid ${({ theme }) => theme.colors.grayScale.gy100};
+  }
+`;
+
+export const CardSectionTitle = styled.p`
+  ${({ theme }) => theme.fonts.header.h3};
+  color: ${({ theme }) => theme.colors.violet.vt500};
+`;
+
+export const CardSectionBody = styled.p`
+  ${({ theme }) => theme.fonts.body.medium400};
+  color: ${({ theme }) => theme.colors.grayScale.gy900};
+`;
+
+export const TocLabel = styled.p`
+  ${({ theme }) => theme.fonts.body.medium400};
+  color: ${({ theme }) => theme.colors.grayScale.black};
+`;
+
+export const TocList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  width: 100%;
+`;
+
+export const ScrollFade = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3.8125rem;
+  background: linear-gradient(
+    to bottom,
+    rgb(233 233 234 / 0%),
+    ${({ theme }) => theme.colors.grayScale.gy100}
+  );
+  pointer-events: none;
+`;

@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Hashtag } from '@/components';
-import { mockArticle } from './mockArticle';
+import { AiGuideDrawer, Hashtag } from '@/components';
+import { getArticleSectionElementId, mockArticle } from './mockArticle';
 import * as S from './Blog.styles';
 
 // AI 가이드 페이지 (F6). 기업 카드의 "AI 가이드 보기" 버튼을 누르면 열린다.
-// AI 가이드 패널을 여는 토글 버튼은 두었지만, 열렸을 때의 패널 디자인이 아직 없어 클릭 동작은 비워뒀다.
 export default function Blog() {
   const navigate = useNavigate();
+  const [isAiGuideOpen, setIsAiGuideOpen] = useState(false);
 
   return (
     <S.Container>
@@ -46,10 +47,10 @@ export default function Blog() {
       <S.Body>
         <S.OriginalArea>
           {mockArticle.sections.map((section) => (
-            <S.Section key={section.id}>
+            <S.Section key={section.id} id={getArticleSectionElementId(section.id)}>
               <S.SectionHeadingRow>
                 <S.SectionHeading $highlighted={Boolean(section.highlighted)}>
-                  {section.heading}
+                  {section.order}. {section.title}
                 </S.SectionHeading>
                 {section.highlighted && <S.SectionMarker />}
               </S.SectionHeadingRow>
@@ -59,9 +60,17 @@ export default function Blog() {
         </S.OriginalArea>
       </S.Body>
 
-      <S.AiGuideToggle type="button" aria-label="AI 가이드 토글">
-        <S.AiGuideToggleIcon />
-      </S.AiGuideToggle>
+      {isAiGuideOpen ? (
+        <AiGuideDrawer sections={mockArticle.sections} onClose={() => setIsAiGuideOpen(false)} />
+      ) : (
+        <S.AiGuideToggle
+          type="button"
+          aria-label="AI 가이드 열기"
+          onClick={() => setIsAiGuideOpen(true)}
+        >
+          <S.AiGuideToggleIcon />
+        </S.AiGuideToggle>
+      )}
     </S.Container>
   );
 }
