@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState, type FormEvent } from 'react';
+import { useBlocker } from 'react-router-dom';
 
-import { Button, Tag } from '@/components';
+import { Button, Tag, WarningModal } from '@/components';
 import { showErrorToast, toast, type ApiError } from '@/lib';
 import type { JobField } from '@/types/profile';
 
@@ -71,6 +72,12 @@ export default function ProfileForm({
   const fieldRefs = useRef<Partial<Record<ProfileField, HTMLDivElement | null>>>({});
   const fieldOrder = FIELD_ORDER[variant];
   const isDirty = JSON.stringify(values) !== JSON.stringify(savedValues);
+
+  // settings(마이페이지)에서 저장하지 않고 다른 페이지로 이동하려 하면 경고 모달을 띄운다
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      variant === 'settings' && isDirty && currentLocation.pathname !== nextLocation.pathname,
+  );
 
   const tagName = (id: number) => techTags.find((tag) => tag.techTagId === id)?.name ?? '';
 
@@ -239,6 +246,16 @@ export default function ProfileForm({
             closeModal();
           }}
           onClose={closeModal}
+        />
+      )}
+
+      {blocker.state === 'blocked' && (
+        <WarningModal
+          title="저장하지 않은 변경사항이 있어요"
+          description="지금 나가면 변경한 내용이 사라져요."
+          confirmLabel="나가기"
+          onCancel={() => blocker.reset()}
+          onConfirm={() => blocker.proceed()}
         />
       )}
     </S.Form>
