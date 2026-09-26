@@ -49,7 +49,8 @@ export interface CompanyPost {
   title: string;
   publishedAt: string;
   categories: string[];
-  level: PostLevel;
+  // 수집 때 난이도를 못 정한 글(402편 중 2편)은 null 로 온다
+  level: PostLevel | null;
   summary: string;
   skills: string[];
   matchedSkills: string[];
