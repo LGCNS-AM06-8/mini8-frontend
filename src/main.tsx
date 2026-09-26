@@ -11,6 +11,7 @@ import {
   GoogleCallback,
   Home,
   Landing,
+  Loading,
   Login,
   MyPage,
   UserInput,
@@ -66,6 +67,10 @@ const routes = createBrowserRouter([
           {
             path: 'userInput',
             element: <UserInput />,
+          },
+          {
+            path: 'loading',
+            element: <Loading />,
           },
           {
             path: ':companyId/:blogId',
