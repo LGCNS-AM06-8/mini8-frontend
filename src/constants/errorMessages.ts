@@ -7,6 +7,7 @@ export const ERROR_MESSAGES = {
   INVALID_REFRESH_TOKEN: '로그인이 만료되었습니다. 다시 로그인해 주세요.',
   INVALID_INPUT: '입력한 내용을 다시 확인해 주세요.',
   PROFILE_REQUIRED: '기본 정보를 먼저 입력해 주세요.',
+  PROFILE_ALREADY_EXISTS: '이미 기본 정보를 저장했어요.',
   NOT_FOUND: '요청하신 항목을 찾을 수 없습니다.',
   ALREADY_BOOKMARKED: '이미 저장한 글입니다.',
   AI_UNAVAILABLE: 'AI 가이드를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',

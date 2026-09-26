@@ -3,11 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { StateNotice } from '@/components';
 import { ProfileForm } from '@/features/profile';
 import { toast, type ApiError } from '@/lib';
-import { getProfile } from '@/services/profile';
+import { getProfile, updateProfile } from '@/services/profile';
 import { getTechTags } from '@/services/techTags';
 import type { ProfileRequest, ProfileResponse, TechTag } from '@/types/profile';
 
-import { mockUpdateProfile } from './mockMyProfile';
 import * as S from './MyPage.styles';
 
 type LoadState =
@@ -15,7 +14,7 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'done'; profile: ProfileResponse; techTags: TechTag[] };
 
-// 마이페이지 (F8). 내 정보 · 기술 목록은 서버에서 받고, 저장은 PUT /api/profile 이 생길 때까지 목업이다.
+// 마이페이지 (F8). 내 정보 · 기술 목록 조회와 저장 모두 서버를 쓴다.
 export default function MyPage() {
   const [state, setState] = useState<LoadState>({ status: 'loading' });
 
@@ -31,7 +30,7 @@ export default function MyPage() {
   }, [load]);
 
   const handleSubmit = async (request: ProfileRequest) => {
-    await mockUpdateProfile(request);
+    await updateProfile(request);
     toast.success('내 정보를 저장했어요');
   };
 
