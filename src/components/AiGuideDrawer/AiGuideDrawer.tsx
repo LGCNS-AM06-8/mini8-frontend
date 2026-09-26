@@ -34,34 +34,36 @@ export default function AiGuideDrawer({ sections, onClose }: AiGuideDrawerProps)
     <>
       <S.Overlay type="button" onClick={onClose} aria-label="AI 가이드 닫기" />
       <S.Drawer>
-        <S.Header>
-          <S.Title>AI 읽기 가이드</S.Title>
-          <S.CloseButton type="button" onClick={onClose} aria-label="AI 가이드 닫기">
-            <S.CloseIconGlyph />
-          </S.CloseButton>
-        </S.Header>
+        <S.ScrollArea>
+          <S.Header>
+            <S.Title>AI 읽기 가이드</S.Title>
+            <S.CloseButton type="button" onClick={onClose} aria-label="AI 가이드 닫기">
+              <S.CloseIconGlyph />
+            </S.CloseButton>
+          </S.Header>
 
-        <S.Card>
-          {mockAiGuide.cardSections.map((section) => (
-            <S.CardSection key={section.id}>
-              <S.CardSectionTitle>{section.title}</S.CardSectionTitle>
-              <S.CardSectionBody>{section.body}</S.CardSectionBody>
-            </S.CardSection>
-          ))}
-        </S.Card>
+          <S.Card>
+            {mockAiGuide.cardSections.map((section) => (
+              <S.CardSection key={section.id}>
+                <S.CardSectionTitle>{section.title}</S.CardSectionTitle>
+                <S.CardSectionBody>{section.body}</S.CardSectionBody>
+              </S.CardSection>
+            ))}
+          </S.Card>
 
-        <S.TocLabel>목차</S.TocLabel>
-        <S.TocList>
-          {sections.map((section) => (
-            <TocRow
-              key={section.id}
-              order={section.order}
-              title={section.title}
-              highlighted={section.highlighted}
-              onClick={() => handleTocClick(section.id)}
-            />
-          ))}
-        </S.TocList>
+          <S.TocLabel>목차</S.TocLabel>
+          <S.TocList>
+            {sections.map((section) => (
+              <TocRow
+                key={section.id}
+                order={section.order}
+                title={section.title}
+                highlighted={section.highlighted}
+                onClick={() => handleTocClick(section.id)}
+              />
+            ))}
+          </S.TocList>
+        </S.ScrollArea>
         <S.ScrollFade />
       </S.Drawer>
     </>

@@ -19,15 +19,20 @@ export const Drawer = styled.div`
   top: 0;
   right: 0;
   z-index: 10;
+  width: 33.4375rem;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.violet.vt000};
+  box-shadow: -6px 0 32px 0 rgb(0 0 0 / 16%);
+`;
+
+export const ScrollArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5625rem;
-  width: 33.4375rem;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   padding: 1.5rem;
   overflow-y: auto;
-  background-color: ${({ theme }) => theme.colors.violet.vt000};
-  box-shadow: -6px 0 32px 0 rgb(0 0 0 / 16%);
 `;
 
 export const Header = styled.div`
