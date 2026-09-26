@@ -31,9 +31,10 @@ export default function GoogleCallback() {
       return;
     }
 
+    // 이름 받아오는 변수 추가
     loginWithGoogle(googleAccessToken)
-      .then(({ accessToken, refreshToken, profileCompleted }) => {
-        setTokens(accessToken, refreshToken);
+      .then(({ accessToken, refreshToken, name, profileCompleted }) => {
+        setTokens(accessToken, refreshToken, name);
         navigate(profileCompleted ? PATHS.HOME : PATHS.USER_INPUT, { replace: true });
       })
       .catch((error: ApiError) => fail(error.message));

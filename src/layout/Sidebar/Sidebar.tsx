@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { MenuItem } from '@/components';
+import { MenuItem, WarningModal } from '@/components';
 import { PATHS } from '@/constants/paths';
 import { useAuthStore } from '@/stores/useAuthStore';
 import * as S from './Sidebar.styles';
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const clearAuth = useAuthStore((state) => state.clear);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
     clearAuth();
@@ -37,7 +39,16 @@ export default function Sidebar() {
         />
       ))}
       <S.FlexSpacer />
-      <MenuItem label="로그아웃" onClick={handleLogout} />
+      <MenuItem label="로그아웃" onClick={() => setShowLogoutModal(true)} />
+      {showLogoutModal && (
+        <WarningModal
+          title="로그아웃 하시겠어요?"
+          description="다시 로그인해야 이용할 수 있어요."
+          confirmLabel="로그아웃"
+          onCancel={() => setShowLogoutModal(false)}
+          onConfirm={handleLogout}
+        />
+      )}
     </S.Container>
   );
 }
