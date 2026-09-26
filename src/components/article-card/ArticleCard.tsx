@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { BookmarkButton } from '@/components/bookmark-button';
 import { Button } from '@/components/button';
 import { Hashtag } from '@/components/hashtag';
-import { toBlog } from '@/constants/paths';
+import { PATHS, toBlog } from '@/constants/paths';
+import type { LoadingLocationState } from '@/types/navigation';
 
 import * as S from './ArticleCard.styles';
 import type { ArticleCardProps } from './ArticleCard.types';
@@ -17,6 +18,11 @@ export default function ArticleCard({
   const navigate = useNavigate();
   const blogPath = toBlog(String(companyId), String(post.postId));
   const date = post.publishedAt.slice(0, 10);
+  // 서버에서 AI 가이드 응답을 받아온 뒤, AI 가이드가 열린 상태로 화면을 띄움
+  const loadingState: LoadingLocationState = {
+    to: blogPath,
+    forwardState: { openAiGuide: true },
+  };
 
   return (
     <S.Card>
@@ -35,11 +41,7 @@ export default function ArticleCard({
           ))}
         </S.Tags>
         <S.Actions>
-          {/* 글 화면에서 가이드 패널을 바로 열 수 있게 state 로 알려 준다 */}
-          <Button
-            variant="soft"
-            onClick={() => navigate(blogPath, { state: { openAiGuide: true } })}
-          >
+          <Button variant="soft" onClick={() => navigate(PATHS.LOADING, { state: loadingState })}>
             AI 가이드 보기
           </Button>
           <BookmarkButton bookmarked={post.bookmarked} onClick={() => onBookmarkToggle(post)} />
@@ -47,7 +49,9 @@ export default function ArticleCard({
       </S.TopRow>
       <S.Date dateTime={date}>{date}</S.Date>
       <S.Title>
-        <S.TitleLink to={blogPath}>{post.title}</S.TitleLink>
+        <S.TitleLink to={PATHS.LOADING} state={loadingState}>
+          {post.title}
+        </S.TitleLink>
       </S.Title>
       <S.Summary>{post.summary}</S.Summary>
     </S.Card>
