@@ -8,6 +8,8 @@ export interface CompanySummary {
   companyId: number;
   name: string;
   summary: string;
+  // 각 회사 공식 로고 이미지 주소. 없으면 null 이고 화면은 로고 칸을 비워 둔다 (09-25 추가)
+  logoUrl: string | null;
   matchedSkillCount: number;
   totalSkillCount: number;
   matchedPostCount: number;

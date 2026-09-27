@@ -4,16 +4,20 @@ import { toCompany } from '@/constants/paths';
 import * as S from './CompanyListCard.styles';
 import type { CompanyListCardProps } from './CompanyListCard.types';
 
-export default function CompanyListCard({
-  company,
-  interestSkills,
-  logoUrl,
-}: CompanyListCardProps) {
-  const { companyId, name, recommended, matchedSkillCount, totalSkillCount, matchedPostCount } =
-    company;
+export default function CompanyListCard({ company, interestSkills }: CompanyListCardProps) {
+  const {
+    companyId,
+    name,
+    logoUrl,
+    recommended,
+    matchedSkillCount,
+    totalSkillCount,
+    matchedPostCount,
+  } = company;
 
   return (
-    <S.Card to={toCompany(String(companyId))}>
+    // 관심 기술을 하나도 다루지 않은 기업은 목록에서 빼지 않고 연하게 그린다(명세: matchedSkillCount 0)
+    <S.Card to={toCompany(String(companyId))} $dimmed={matchedSkillCount === 0}>
       <S.Logo>{logoUrl && <img src={logoUrl} alt="" />}</S.Logo>
       <S.Body>
         <S.TitleRow>
