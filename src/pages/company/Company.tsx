@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import StatBlogIcon from '@/assets/icons/stat-blog.svg?react';
@@ -8,7 +8,8 @@ import StatTopicIcon from '@/assets/icons/stat-topic.svg?react';
 import { ArticleCard, BackButton, Button, Dropdown, StateNotice, Toggle } from '@/components';
 import type { ArticleCardPost, DropdownOption } from '@/components';
 import { PATHS } from '@/constants/paths';
-import type { ApiError } from '@/lib';
+import { showErrorToast, type ApiError } from '@/lib';
+import { addBookmark, removeBookmark } from '@/services/bookmark';
 import { getCompanyDetail, getCompanyPosts } from '@/services/company';
 import type { CompanyDetail, CompanyPostsResponse, NameCount } from '@/types/company';
 
@@ -36,7 +37,7 @@ const SORT_OPTIONS: DropdownOption<SortOrder>[] = [
 const formatCounts = (items: NameCount[]) =>
   items.map(({ name, count }) => `${name} ${count}`).join(' · ');
 
-// 기업 상세 (F5). 상단 기업 정보 · 글 카드 목록은 서버에서 받고, 북마크는 아직 목업이다.
+// 기업 상세 (F5). 상단 기업 정보 · 글 카드 목록 · 북마크 모두 서버를 쓴다.
 export default function Company() {
   const navigate = useNavigate();
   const { companyId: companyIdParam } = useParams();
@@ -53,6 +54,8 @@ export default function Company() {
   const [matchedCount, setMatchedCount] = useState<number | null>(null);
 
   const [detailState, setDetailState] = useState<DetailState>({ status: 'loading' });
+  // 같은 글의 북마크 요청이 겹치지 않게 진행 중인 글 번호를 둔다
+  const pendingBookmarks = useRef(new Set<number>());
 
   const loadDetail = useCallback(() => {
     setDetailState({ status: 'loading' });
@@ -100,11 +103,27 @@ export default function Company() {
     [posts, sortOrder],
   );
 
-  const handleBookmarkToggle = (post: ArticleCardPost) => {
+  // 버튼을 먼저 바꾸고 서버에 저장한다. 이미 원하는 상태(저장 409 · 해제 404)면 성공으로 보고,
+  // 그 밖의 실패는 버튼을 되돌리고 토스트로 알린다.
+  const handleBookmarkToggle = async (post: ArticleCardPost) => {
+    const { postId } = post;
+    if (pendingBookmarks.current.has(postId)) return;
+    pendingBookmarks.current.add(postId);
+
     const next = !post.bookmarked;
-    setBookmarkOverrides((prev) => ({ ...prev, [post.postId]: next }));
-    // 북마크 API(POST · DELETE /api/bookmarks/{postId})가 develop 에 들어오면 서버에 저장한다
-    console.info(`[mock] ${next ? 'POST' : 'DELETE'} /api/bookmarks/${post.postId}`);
+    setBookmarkOverrides((prev) => ({ ...prev, [postId]: next }));
+    try {
+      await (next ? addBookmark(postId) : removeBookmark(postId));
+    } catch (error) {
+      const { code } = error as ApiError;
+      const alreadyDone = next ? code === 'ALREADY_BOOKMARKED' : code === 'NOT_FOUND';
+      if (!alreadyDone) {
+        setBookmarkOverrides((prev) => ({ ...prev, [postId]: !next }));
+        showErrorToast(error as ApiError);
+      }
+    } finally {
+      pendingBookmarks.current.delete(postId);
+    }
   };
 
   if (detailState.status === 'loading')
