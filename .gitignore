@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# 이 프로젝트는 yarn을 표준 패키지 매니저로 사용
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

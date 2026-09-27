@@ -6,6 +6,7 @@ import { PATHS } from '@/constants/paths';
 import { ProfileForm } from '@/features/profile';
 import type { ApiError } from '@/lib';
 import { getTechTags } from '@/services/techTags';
+import type { LoadingLocationState } from '@/types/navigation';
 import type { ProfileRequest, TechTag } from '@/types/profile';
 
 import { mockSaveProfile } from './mockProfile';
@@ -34,7 +35,8 @@ export default function UserInput() {
 
   const handleSubmit = async (request: ProfileRequest) => {
     await mockSaveProfile(request);
-    navigate(PATHS.HOME, { replace: true });
+    const state: LoadingLocationState = { variant: 'companyList' };
+    navigate(PATHS.LOADING, { replace: true, state });
   };
 
   const renderForm = () => {

@@ -43,14 +43,14 @@ const colors = {
 
 const fonts = {
   header: {
-    h1: createFontStyle(1.75, 700, 130, -0.035),
-    h2: createFontStyle(1.5, 700, 134, -0.03),
-    h3: createFontStyle(1.25, 700, 142, -0.025),
+    h1: createFontStyle(1.625, 700, 130, -0.035),
+    h2: createFontStyle(1.375, 700, 134, -0.03),
+    h3: createFontStyle(1.125, 700, 142, -0.025),
   },
   body: {
-    large400: createFontStyle(1.125, 500, 154, -0.0225),
-    medium400: createFontStyle(1, 500, 150, -0.02),
-    small400: createFontStyle(0.875, 500, 142, -0.0175),
+    large400: createFontStyle(1, 500, 154, -0.0225),
+    medium400: createFontStyle(0.875, 500, 150, -0.02),
+    small400: createFontStyle(0.75, 500, 142, -0.0175),
   },
 };
 

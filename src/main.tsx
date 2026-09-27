@@ -11,12 +11,14 @@ import {
   GoogleCallback,
   Home,
   Landing,
+  Loading,
   Login,
   MyPage,
   UserInput,
 } from '@/pages';
 import Layout, { ProtectedRoute, SidebarLayout } from '@/layout';
 import { toasterProps } from '@/lib';
+import { ResponsiveGate } from '@/components';
 
 const routes = createBrowserRouter([
   {
@@ -68,6 +70,10 @@ const routes = createBrowserRouter([
             element: <UserInput />,
           },
           {
+            path: 'loading',
+            element: <Loading />,
+          },
+          {
             path: ':companyId/:blogId',
             element: <Blog />,
           },
@@ -81,7 +87,9 @@ createRoot(document.getElementById('root')!).render(
   <>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <RouterProvider router={routes} />
+      <ResponsiveGate>
+        <RouterProvider router={routes} />
+      </ResponsiveGate>
       <Toaster {...toasterProps} />
     </ThemeProvider>
   </>,

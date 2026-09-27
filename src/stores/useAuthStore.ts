@@ -4,7 +4,9 @@ import { persist } from 'zustand/middleware';
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  setTokens: (accessToken: string, refreshToken: string) => void;
+  // 로딩 화면("OOO님 만의 리딩 가이드가...")에 쓰는 구글 로그인 응답 이름
+  name: string | null;
+  setTokens: (accessToken: string, refreshToken: string, name: string) => void;
   clear: () => void;
 }
 
@@ -15,8 +17,9 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       accessToken: null,
       refreshToken: null,
-      setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
-      clear: () => set({ accessToken: null, refreshToken: null }),
+      name: null,
+      setTokens: (accessToken, refreshToken, name) => set({ accessToken, refreshToken, name }),
+      clear: () => set({ accessToken: null, refreshToken: null, name: null }),
     }),
     { name: 'auth' },
   ),

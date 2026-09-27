@@ -27,3 +27,7 @@ export { LoadingDots } from './loading-dots';
 export type { LoadingDotsProps, LoadingDotsSize } from './loading-dots';
 export { StateNotice } from './state-notice';
 export type { StateNoticeAction, StateNoticeProps, StateNoticeTone } from './state-notice';
+export { WarningModal } from './warning-modal';
+export type { WarningModalProps } from './warning-modal';
+export { ResponsiveGate } from './responsive-gate';
+export type { ResponsiveGateProps } from './responsive-gate';

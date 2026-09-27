@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AiGuideDrawer, Hashtag } from '@/components';
 import { getArticleSectionElementId, mockArticle } from './mockArticle';
 import * as S from './Blog.styles';
 
-// AI 가이드 페이지 (F6). 기업 카드의 "AI 가이드 보기" 버튼을 누르면 열린다.
+// AI 가이드 페이지 (F6)- 기업 카드와 AI 가이드 보기 버튼을 누르면 로딩 페이지를 먼저 띄움 (서버 대기용)
 export default function Blog() {
   const navigate = useNavigate();
-  const [isAiGuideOpen, setIsAiGuideOpen] = useState(false);
+  const location = useLocation();
+  const openAiGuide = Boolean((location.state as { openAiGuide?: boolean } | null)?.openAiGuide);
+  const [isAiGuideOpen, setIsAiGuideOpen] = useState(openAiGuide);
 
   return (
     <S.Container>
