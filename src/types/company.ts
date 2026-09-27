@@ -34,6 +34,8 @@ export interface CompanyStats {
 export interface CompanyDetail {
   companyId: number;
   name: string;
+  // 각 회사 공식 로고 이미지 주소. 없으면 null 이고 화면은 로고 칸을 비워 둔다 (09-25 추가)
+  logoUrl: string | null;
   summary: string | null;
   mainBusiness: string | null;
   sourceUrl: string | null;
