@@ -6,9 +6,9 @@ export const GlobalStyle = createGlobalStyle`
     ${reset}
     ${fontFaces}
 
-    /* 폰트 사이즈 전체 수정을 위해 기본 루트 폰트 px 변경 18-> 14 */
+    /* 폰트 사이즈 전체 수정을 위해 기본 루트 폰트 px 변경 18-> 16 */
     :root {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     html, body {
