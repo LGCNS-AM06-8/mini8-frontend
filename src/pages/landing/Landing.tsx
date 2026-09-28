@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GradientCard } from '@/components';
@@ -16,10 +16,21 @@ export default function Landing() {
   const navigate = useNavigate();
   const accessToken = useAuthStore((state) => state.accessToken);
 
-  const goNext = useCallback(
-    () => navigate(accessToken ? PATHS.HOME : PATHS.LOGIN, { replace: true }),
-    [accessToken, navigate],
-  );
+  const [leaving, setLeaving] = useState(false);
+  const leavingRef = useRef(false);
+
+  // 컷처럼 끊기지 않게 짧게 사라진 뒤 이동한다(움직임 줄이기 설정이면 바로 이동)
+  const goNext = useCallback(() => {
+    if (leavingRef.current) return;
+    leavingRef.current = true;
+    const move = () => navigate(accessToken ? PATHS.HOME : PATHS.LOGIN, { replace: true });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      move();
+      return;
+    }
+    setLeaving(true);
+    window.setTimeout(move, S.FADE_OUT_MS);
+  }, [accessToken, navigate]);
 
   useEffect(() => {
     const timer = window.setTimeout(goNext, AUTO_NEXT_MS);
@@ -28,7 +39,12 @@ export default function Landing() {
 
   return (
     <GradientCard>
-      <S.Body type="button" onClick={goNext} aria-label="기술블로그 읽기 가이드 시작하기">
+      <S.Body
+        type="button"
+        onClick={goNext}
+        $leaving={leaving}
+        aria-label="기술블로그 읽기 가이드 시작하기"
+      >
         <S.Group>
           <S.BigStar aria-hidden />
           <S.Title>

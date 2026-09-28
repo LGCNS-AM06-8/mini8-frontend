@@ -35,6 +35,15 @@ const fadeUp = keyframes`
   }
 `;
 
+const fadeOut = keyframes`
+  to {
+    opacity: 0;
+  }
+`;
+
+// Landing.tsx 가 이 시간만큼 기다렸다가 이동한다
+export const FADE_OUT_MS = 200;
+
 const spin = keyframes`
   to {
     transform: rotate(360deg);
@@ -60,7 +69,7 @@ const reducedMotion = css`
 `;
 
 // 화면 아무 곳이나 누르면 바로 다음 화면으로 간다. 시안에서 큰 별 윗단이 카드 위에서 약 153px 이다
-export const Body = styled.button`
+export const Body = styled.button<{ $leaving: boolean }>`
   display: flex;
   flex: 1;
   align-items: flex-start;
@@ -70,6 +79,12 @@ export const Body = styled.button`
   border: none;
   background: none;
   cursor: pointer;
+
+  ${({ $leaving }) =>
+    $leaving &&
+    css`
+      animation: ${fadeOut} ${FADE_OUT_MS}ms ease-in forwards;
+    `}
 `;
 
 export const Group = styled.div`
