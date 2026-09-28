@@ -7,6 +7,8 @@ interface AuthState {
   // 로딩 화면("OOO님 만의 리딩 가이드가...")에 쓰는 구글 로그인 응답 이름
   name: string | null;
   setTokens: (accessToken: string, refreshToken: string, name: string) => void;
+  // 재발급은 access 토큰만 새로 준다(refresh 토큰 · 이름은 그대로)
+  setAccessToken: (accessToken: string) => void;
   clear: () => void;
 }
 
@@ -19,6 +21,7 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       name: null,
       setTokens: (accessToken, refreshToken, name) => set({ accessToken, refreshToken, name }),
+      setAccessToken: (accessToken) => set({ accessToken }),
       clear: () => set({ accessToken: null, refreshToken: null, name: null }),
     }),
     { name: 'auth' },
