@@ -44,7 +44,11 @@ axiosInstance.interceptors.response.use(
     const code = error.response?.data?.code;
 
     switch (code) {
+      // TOKEN_EXPIRED 도 여기서 로그인으로 보낸다. 서버 재발급(POST /api/auth/refresh)이 아직 없어서,
+      // 만료 토큰을 계속 붙이면 로그인이 필요 없는 API(GET /api/tech-tags)까지 401 로 막힌다.
+      // 재발급이 생기면 F0b 에서 TOKEN_EXPIRED 만 「재발급 후 재시도」로 바꾼다.
       case 'UNAUTHORIZED':
+      case 'TOKEN_EXPIRED':
       case 'INVALID_REFRESH_TOKEN':
         useAuthStore.getState().clear();
         redirect(PATHS.LOGIN);
@@ -52,7 +56,6 @@ axiosInstance.interceptors.response.use(
       case 'PROFILE_REQUIRED':
         redirect(PATHS.USER_INPUT);
         break;
-      // TOKEN_EXPIRED 는 재발급 후 재시도 — F0b 에서 처리한다.
     }
 
     const apiError: ApiError = {

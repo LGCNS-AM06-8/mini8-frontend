@@ -10,7 +10,7 @@ export const mockUser = {
 // 서버가 정렬해서 내려주므로 화면은 이 순서대로 그린다.
 export const mockCompanies: CompanySummary[] = [
   {
-    companyId: 1,
+    companyId: 5,
     name: '우아한형제들',
     summary: '배달의민족을 만드는 회사',
     matchedSkillCount: 2,
@@ -24,7 +24,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: true,
   },
   {
-    companyId: 2,
+    companyId: 4,
     name: '토스',
     summary: '금융을 쉽고 간편하게',
     matchedSkillCount: 1,
@@ -35,7 +35,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 3,
+    companyId: 8,
     name: 'LY(라인)',
     summary: '메신저 LINE 을 만드는 회사',
     matchedSkillCount: 1,
@@ -46,7 +46,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 4,
+    companyId: 6,
     name: '컬리',
     summary: '새벽배송 마켓컬리',
     matchedSkillCount: 1,
@@ -57,7 +57,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 5,
+    companyId: 7,
     name: '네이버 D2',
     summary: '네이버 개발자 블로그',
     matchedSkillCount: 1,
@@ -68,7 +68,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 6,
+    companyId: 3,
     name: 'SK플래닛',
     summary: 'OK캐쉬백 · 시럽을 만드는 회사',
     matchedSkillCount: 1,
@@ -79,7 +79,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 7,
+    companyId: 1,
     name: '올리브영',
     summary: '헬스 · 뷰티 스토어',
     matchedSkillCount: 0,
@@ -90,7 +90,7 @@ export const mockCompanies: CompanySummary[] = [
     recommended: false,
   },
   {
-    companyId: 8,
+    companyId: 2,
     name: '인프랩',
     summary: '개발자 강의 플랫폼 인프런',
     matchedSkillCount: 0,
