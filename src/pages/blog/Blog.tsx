@@ -17,9 +17,14 @@ type DetailState =
   | { status: 'error'; message: string }
   | { status: 'done'; post: PostDetail };
 
+// 한 달(30일)이 넘어가면 "N일 전" 대신 "N달 전"을 보여주도록 수정
+const RELATIVE_DAYS_LIMIT = 30;
+
 const formatRelativeDate = (dateStr: string) => {
   const diffDays = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86_400_000);
-  return diffDays <= 0 ? '오늘' : `${diffDays}일 전`;
+  if (diffDays <= 0) return '오늘';
+  if (diffDays <= RELATIVE_DAYS_LIMIT) return `${diffDays}일 전`;
+  return `${Math.floor(diffDays / 30)}달 전`;
 };
 
 // 글 상세 · AI 가이드 (05)
