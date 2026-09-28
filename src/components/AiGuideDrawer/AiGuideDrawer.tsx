@@ -122,7 +122,6 @@ export default function AiGuideDrawer({
             ))}
           </S.TocList>
         </S.ScrollArea>
-        <S.ScrollFade />
       </S.Drawer>
     </>
   );
