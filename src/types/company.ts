@@ -1,4 +1,4 @@
-// GET /api/companies 응답의 기업 한 곳 (노션 API 명세, 09.21 기준 "작성중")
+// GET /api/companies 응답의 기업 한 곳 (노션 API 명세, 백엔드 #39 로 09.28 구현)
 export interface MatchedSkill {
   name: string;
   postCount: number;
@@ -16,6 +16,10 @@ export interface CompanySummary {
   totalPostCount: number;
   matchedSkills: MatchedSkill[];
   recommended: boolean;
+}
+
+export interface CompaniesResponse {
+  companies: CompanySummary[];
 }
 
 // GET /api/companies/{id} 응답 (노션 API 명세, 09.21 기준 "작성중")
