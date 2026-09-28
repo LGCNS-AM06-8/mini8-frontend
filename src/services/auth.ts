@@ -19,3 +19,9 @@ export const loginWithGoogle = async (googleAccessToken: string): Promise<Google
 
   return { ...response.data, accessToken, refreshToken };
 };
+
+// POST /api/auth/logout (204). 로그인 토큰이 필요하고, 바디의 refresh 토큰을 서버가 폐기한다.
+// 토큰이 만료됐으면 인터셉터가 재발급 뒤 다시 보낸다.
+export const logout = async (refreshToken: string): Promise<void> => {
+  await axiosInstance.post('/api/auth/logout', { refreshToken });
+};
