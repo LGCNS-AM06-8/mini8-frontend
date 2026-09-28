@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import StatBlogIcon from '@/assets/icons/stat-blog.svg?react';
@@ -8,14 +8,20 @@ import StatTopicIcon from '@/assets/icons/stat-topic.svg?react';
 import { ArticleCard, BackButton, Button, Dropdown, StateNotice, Toggle } from '@/components';
 import type { ArticleCardPost, DropdownOption } from '@/components';
 import { PATHS } from '@/constants/paths';
-import type { ApiError } from '@/lib';
-import { getCompanyPosts } from '@/services/company';
-import type { CompanyPostsResponse, NameCount } from '@/types/company';
+import { showErrorToast, type ApiError } from '@/lib';
+import { addBookmark, removeBookmark } from '@/services/bookmark';
+import { getCompanyDetail, getCompanyPosts } from '@/services/company';
+import type { CompanyDetail, CompanyPostsResponse, NameCount } from '@/types/company';
 
 import * as S from './Company.styles';
-import { mockGetCompanyDetail } from './mockCompany';
 
 type SortOrder = 'relevance' | 'latest';
+
+type DetailState =
+  | { status: 'loading' }
+  | { status: 'notFound' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; company: CompanyDetail };
 
 type PostsState =
   | { status: 'loading' }
@@ -31,7 +37,7 @@ const SORT_OPTIONS: DropdownOption<SortOrder>[] = [
 const formatCounts = (items: NameCount[]) =>
   items.map(({ name, count }) => `${name} ${count}`).join(' · ');
 
-// 기업 상세 (F5). 글 카드 목록은 서버에서 받고, 상단 기업 정보는 GET /api/companies/{id} 가 생길 때까지 목업이다.
+// 기업 상세 (F5). 상단 기업 정보 · 글 카드 목록 · 북마크 모두 서버를 쓴다.
 export default function Company() {
   const navigate = useNavigate();
   const { companyId: companyIdParam } = useParams();
@@ -47,7 +53,28 @@ export default function Company() {
   // 토글을 바꿔 다시 받는 동안에도 「N편」이 사라지지 않게 마지막으로 받은 수를 둔다
   const [matchedCount, setMatchedCount] = useState<number | null>(null);
 
-  const company = useMemo(() => mockGetCompanyDetail(companyId), [companyId]);
+  const [detailState, setDetailState] = useState<DetailState>({ status: 'loading' });
+  // 같은 글의 북마크 요청이 겹치지 않게 진행 중인 글 번호를 둔다
+  const pendingBookmarks = useRef(new Set<number>());
+
+  const loadDetail = useCallback(() => {
+    setDetailState({ status: 'loading' });
+    getCompanyDetail(companyId)
+      .then((company) => setDetailState({ status: 'done', company }))
+      .catch((error: ApiError) =>
+        setDetailState(
+          error.code === 'NOT_FOUND'
+            ? { status: 'notFound' }
+            : { status: 'error', message: error.message },
+        ),
+      );
+  }, [companyId]);
+
+  useEffect(() => {
+    loadDetail();
+  }, [loadDetail]);
+
+  const company = detailState.status === 'done' ? detailState.company : null;
 
   const loadPosts = useCallback(() => {
     setPostsState({ status: 'loading' });
@@ -76,12 +103,47 @@ export default function Company() {
     [posts, sortOrder],
   );
 
-  const handleBookmarkToggle = (post: ArticleCardPost) => {
+  // 버튼을 먼저 바꾸고 서버에 저장한다. 이미 원하는 상태(저장 409 · 해제 404)면 성공으로 보고,
+  // 그 밖의 실패는 버튼을 되돌리고 토스트로 알린다.
+  const handleBookmarkToggle = async (post: ArticleCardPost) => {
+    const { postId } = post;
+    if (pendingBookmarks.current.has(postId)) return;
+    pendingBookmarks.current.add(postId);
+
     const next = !post.bookmarked;
-    setBookmarkOverrides((prev) => ({ ...prev, [post.postId]: next }));
-    // 북마크 API(POST · DELETE /api/bookmarks/{postId})가 develop 에 들어오면 서버에 저장한다
-    console.info(`[mock] ${next ? 'POST' : 'DELETE'} /api/bookmarks/${post.postId}`);
+    setBookmarkOverrides((prev) => ({ ...prev, [postId]: next }));
+    try {
+      await (next ? addBookmark(postId) : removeBookmark(postId));
+    } catch (error) {
+      const { code } = error as ApiError;
+      const alreadyDone = next ? code === 'ALREADY_BOOKMARKED' : code === 'NOT_FOUND';
+      if (!alreadyDone) {
+        setBookmarkOverrides((prev) => ({ ...prev, [postId]: !next }));
+        showErrorToast(error as ApiError);
+      }
+    } finally {
+      pendingBookmarks.current.delete(postId);
+    }
   };
+
+  if (detailState.status === 'loading')
+    return (
+      <S.Container>
+        <StateNotice tone="loading" title="기업 정보를 불러오고 있어요" bare />
+      </S.Container>
+    );
+
+  if (detailState.status === 'error')
+    return (
+      <S.Container>
+        <StateNotice
+          tone="error"
+          title="기업 정보를 불러오지 못했어요"
+          description={detailState.message}
+          action={{ label: '다시 시도', onClick: loadDetail }}
+        />
+      </S.Container>
+    );
 
   if (!company) {
     return (
@@ -99,7 +161,7 @@ export default function Company() {
     );
   }
 
-  const { name, summary, mainBusiness, sourceUrl, checkedAt, stats } = company;
+  const { name, logoUrl, summary, mainBusiness, sourceUrl, checkedAt, stats } = company;
   const intro = [summary, mainBusiness].filter(Boolean).join('   ·   ');
   const source = [
     sourceUrl && (
@@ -116,8 +178,8 @@ export default function Company() {
         <BackButton />
         <S.InfoCard>
           <S.CompanyHeader>
-            {/* 로고 출처(서버 logoUrl / 프론트 assets)가 정해지기 전까지 빈 칸으로 둔다 */}
-            <S.Logo />
+            {/* 로고가 없는 기업(logoUrl null)은 회색 빈 칸으로 둔다 */}
+            <S.Logo>{logoUrl && <img src={logoUrl} alt={`${name} 로고`} />}</S.Logo>
             <S.NameBlock>
               <S.Name>{name}</S.Name>
               {intro && <S.Intro>{intro}</S.Intro>}

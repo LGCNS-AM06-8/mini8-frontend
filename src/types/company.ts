@@ -1,4 +1,4 @@
-// GET /api/companies 응답의 기업 한 곳 (노션 API 명세, 09.21 기준 "작성중")
+// GET /api/companies 응답의 기업 한 곳 (노션 API 명세, 백엔드 #39 로 09.28 구현)
 export interface MatchedSkill {
   name: string;
   postCount: number;
@@ -8,12 +8,18 @@ export interface CompanySummary {
   companyId: number;
   name: string;
   summary: string;
+  // 각 회사 공식 로고 이미지 주소. 없으면 null 이고 화면은 로고 칸을 비워 둔다 (09-25 추가)
+  logoUrl: string | null;
   matchedSkillCount: number;
   totalSkillCount: number;
   matchedPostCount: number;
   totalPostCount: number;
   matchedSkills: MatchedSkill[];
   recommended: boolean;
+}
+
+export interface CompaniesResponse {
+  companies: CompanySummary[];
 }
 
 // GET /api/companies/{id} 응답 (노션 API 명세, 09.21 기준 "작성중")
@@ -34,6 +40,8 @@ export interface CompanyStats {
 export interface CompanyDetail {
   companyId: number;
   name: string;
+  // 각 회사 공식 로고 이미지 주소. 없으면 null 이고 화면은 로고 칸을 비워 둔다 (09-25 추가)
+  logoUrl: string | null;
   summary: string | null;
   mainBusiness: string | null;
   sourceUrl: string | null;

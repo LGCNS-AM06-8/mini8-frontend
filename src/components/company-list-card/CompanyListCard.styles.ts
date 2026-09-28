@@ -5,7 +5,8 @@ import ChevronRightSvg from '@/assets/icons/chevron-right.svg?react';
 import RecommendBadgeSvg from '@/assets/icons/recommend-badge.svg?react';
 
 // Figma 공통 컴포넌트 Company List Card (node 251:406). 길이는 Figma px ÷ 16 으로 rem 환산.
-export const Card = styled(Link)`
+// $dimmed: 관련 없는 기업(matchedSkillCount 0). 시안에 연한 상태가 없어 투명도만 낮췄다
+export const Card = styled(Link)<{ $dimmed: boolean }>`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -15,6 +16,7 @@ export const Card = styled(Link)`
   border-radius: 0.875rem;
   background-color: ${({ theme }) => theme.colors.grayScale.white};
   text-decoration: none;
+  opacity: ${({ $dimmed }) => ($dimmed ? 0.5 : 1)};
 `;
 
 export const Logo = styled.div`
