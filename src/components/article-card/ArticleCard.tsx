@@ -21,6 +21,7 @@ export default function ArticleCard({
   // 서버에서 AI 가이드 응답을 받아온 뒤, AI 가이드가 열린 상태로 화면을 띄움
   const loadingState: LoadingLocationState = {
     to: blogPath,
+    postId: post.postId,
     forwardState: { openAiGuide: true },
   };
 
