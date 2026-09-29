@@ -1,4 +1,11 @@
 import { axiosInstance } from '@/lib';
+import type { BookmarksResponse } from '@/types/bookmark';
+
+// GET /api/bookmarks
+export const getBookmarks = async (): Promise<BookmarksResponse> => {
+  const response = await axiosInstance.get<BookmarksResponse>('/api/bookmarks');
+  return response.data;
+};
 
 // POST /api/bookmarks/{postId} (201). 이미 저장한 글이면 409 ALREADY_BOOKMARKED, 없는 글이면 404.
 export const addBookmark = async (postId: number): Promise<void> => {
