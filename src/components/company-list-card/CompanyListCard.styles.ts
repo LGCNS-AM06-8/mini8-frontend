@@ -17,6 +17,16 @@ export const Card = styled(Link)<{ $dimmed: boolean }>`
   background-color: ${({ theme }) => theme.colors.grayScale.white};
   text-decoration: none;
   opacity: ${({ $dimmed }) => ($dimmed ? 0.5 : 1)};
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.violet.vt200};
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 8%);
+    transform: translateY(-0.125rem);
+  }
 `;
 
 export const Logo = styled.div`

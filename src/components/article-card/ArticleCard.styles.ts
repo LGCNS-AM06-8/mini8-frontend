@@ -15,6 +15,16 @@ export const Card = styled.article`
   border: 1px solid ${({ theme }) => theme.colors.grayScale.gy100};
   border-radius: 0.75rem;
   background-color: ${({ theme }) => theme.colors.grayScale.white};
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.violet.vt200};
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 8%);
+    transform: translateY(-0.125rem);
+  }
 `;
 
 export const TopRow = styled.div`
