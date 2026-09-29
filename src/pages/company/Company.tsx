@@ -179,7 +179,9 @@ export default function Company() {
         <S.InfoCard>
           <S.CompanyHeader>
             {/* 로고가 없는 기업(logoUrl null)은 회색 빈 칸으로 둔다 */}
-            <S.Logo>{logoUrl && <img src={logoUrl} alt={`${name} 로고`} />}</S.Logo>
+            <S.Logo $hasLogo={Boolean(logoUrl)}>
+              {logoUrl && <img src={logoUrl} alt={`${name} 로고`} />}
+            </S.Logo>
             <S.NameBlock>
               <S.Name>{name}</S.Name>
               {intro && <S.Intro>{intro}</S.Intro>}
