@@ -4,6 +4,8 @@ export type LoadingVariant = 'guide' | 'companyList';
 // /loading 으로 이동해 올 때 넘기는 값. 완료되면 to 로 이동하고, forwardState 는 그 화면에 그대로 넘김
 export interface LoadingLocationState {
   to?: string;
+  // variant 가 guide 일 때 AI 가이드를 미리 생성해 둘 글 번호
+  postId?: number;
   forwardState?: unknown;
   variant?: LoadingVariant;
 }

@@ -1,19 +1,52 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import {
-  getArticleSectionElementId,
-  mockAiGuide,
-  type ArticleSection,
-} from '@/pages/blog/mockArticle';
 import TocRow from '@/components/TocRow/TocRow';
+import { StateNotice } from '@/components/state-notice';
+import type { ApiError } from '@/lib';
+import { generateGuide } from '@/services/guide';
+import type { GuideResponse } from '@/types/guide';
+import type { PostSection } from '@/types/post';
+
 import * as S from './AiGuideDrawer.styles';
 
 type AiGuideDrawerProps = {
-  sections: ArticleSection[];
+  postId: number;
+  sections: PostSection[];
   onClose: () => void;
+  // 본문 소제목도 강조해야 해서 focusSections 를 부모(Blog)로 보냄
+  onFocusSections?: (focusSections: number[]) => void;
 };
 
-export default function AiGuideDrawer({ sections, onClose }: AiGuideDrawerProps) {
+type GuideState =
+  | { status: 'loading' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; data: GuideResponse };
+
+const CARD_TITLES = ['어디서 부터 읽어야 할까?', '나에게 맞는 읽기 순서는?', '다음 공부는 이렇게!'];
+
+export default function AiGuideDrawer({
+  postId,
+  sections,
+  onClose,
+  onFocusSections,
+}: AiGuideDrawerProps) {
+  const [guideState, setGuideState] = useState<GuideState>({ status: 'loading' });
+
+  const loadGuide = useCallback(() => {
+    setGuideState({ status: 'loading' });
+    generateGuide(postId)
+      .then((data) => {
+        setGuideState({ status: 'done', data });
+        onFocusSections?.(data.focusSections);
+      })
+      .catch((error: ApiError) => setGuideState({ status: 'error', message: error.message }));
+  }, [postId]);
+
+  useEffect(() => {
+    loadGuide();
+    // 드로어를 닫아도 본문 강조는 남겨두도록 함 (드로어 창을 닫으면 강조 표시가 사라지는 문제 해결)
+  }, [loadGuide]);
+
   // 드로어가 떠 있는 동안 뒤쪽 페이지가 스크롤/클릭되지 않게 막는다.
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -23,12 +56,18 @@ export default function AiGuideDrawer({ sections, onClose }: AiGuideDrawerProps)
     };
   }, []);
 
-  const handleTocClick = (sectionId: string) => {
-    document.getElementById(getArticleSectionElementId(sectionId))?.scrollIntoView({
+  const handleTocClick = (seq: number) => {
+    document.getElementById(`section-${seq}`)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
   };
+
+  const focusSet = new Set(guideState.status === 'done' ? guideState.data.focusSections : []);
+  const cardTexts =
+    guideState.status === 'done'
+      ? [guideState.data.section1Text, guideState.data.section2Text, guideState.data.section3Text]
+      : [];
 
   return (
     <>
@@ -42,24 +81,37 @@ export default function AiGuideDrawer({ sections, onClose }: AiGuideDrawerProps)
             </S.CloseButton>
           </S.Header>
 
-          <S.Card>
-            {mockAiGuide.cardSections.map((section) => (
-              <S.CardSection key={section.id}>
-                <S.CardSectionTitle>{section.title}</S.CardSectionTitle>
-                <S.CardSectionBody>{section.body}</S.CardSectionBody>
-              </S.CardSection>
-            ))}
-          </S.Card>
+          {guideState.status === 'loading' && (
+            <StateNotice tone="loading" title="AI 가이드를 만들고 있어요" bare />
+          )}
+          {guideState.status === 'error' && (
+            <StateNotice
+              tone="error"
+              title="AI 가이드를 불러오지 못했어요"
+              description={guideState.message}
+              action={{ label: '다시 시도', onClick: loadGuide }}
+            />
+          )}
+          {guideState.status === 'done' && (
+            <S.Card>
+              {CARD_TITLES.map((title, index) => (
+                <S.CardSection key={title}>
+                  <S.CardSectionTitle>{title}</S.CardSectionTitle>
+                  <S.CardSectionBody>{cardTexts[index]}</S.CardSectionBody>
+                </S.CardSection>
+              ))}
+            </S.Card>
+          )}
 
           <S.TocLabel>목차</S.TocLabel>
           <S.TocList>
             {sections.map((section) => (
               <TocRow
-                key={section.id}
-                order={section.order}
-                title={section.title}
-                highlighted={section.highlighted}
-                onClick={() => handleTocClick(section.id)}
+                key={section.seq}
+                order={section.seq}
+                title={section.heading}
+                highlighted={focusSet.has(section.seq)}
+                onClick={() => handleTocClick(section.seq)}
               />
             ))}
           </S.TocList>
