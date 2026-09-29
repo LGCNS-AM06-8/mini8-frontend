@@ -106,17 +106,3 @@ export const TocList = styled.div`
   gap: 0.4375rem;
   width: 100%;
 `;
-
-export const ScrollFade = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3.8125rem;
-  background: linear-gradient(
-    to bottom,
-    rgb(233 233 234 / 0%),
-    ${({ theme }) => theme.colors.grayScale.gy100}
-  );
-  pointer-events: none;
-`;

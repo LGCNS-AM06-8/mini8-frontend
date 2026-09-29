@@ -1,6 +1,37 @@
-import styled from 'styled-components';
+import styled, { type DefaultTheme } from 'styled-components';
 
 import TocDotIcon from '@/assets/icons/toc-dot.svg?react';
+
+// KEY 가 제일 진하고, REF · LIGHT · SKIP 순으로 옅어지는 4단계 배지 색상
+const badgeColors = ($badge: string, theme: DefaultTheme) => {
+  switch ($badge) {
+    case 'KEY':
+      return {
+        text: theme.colors.violet.vt500,
+        background: theme.colors.violet.vt100,
+        border: theme.colors.violet.vt500,
+      };
+    case 'REF':
+      return {
+        text: theme.colors.grayScale.gy700,
+        background: theme.colors.grayScale.white,
+        border: theme.colors.grayScale.gy300,
+      };
+    case 'SKIP':
+      return {
+        text: theme.colors.grayScale.gy300,
+        background: theme.colors.grayScale.white,
+        border: theme.colors.grayScale.gy100,
+      };
+    case 'LIGHT':
+    default:
+      return {
+        text: theme.colors.grayScale.gy500,
+        background: theme.colors.grayScale.white,
+        border: theme.colors.grayScale.gy100,
+      };
+  }
+};
 
 export const Row = styled.button<{ $highlighted: boolean }>`
   display: flex;
@@ -42,6 +73,16 @@ export const Title = styled.span<{ $highlighted: boolean }>`
   text-overflow: ellipsis;
   color: ${({ $highlighted, theme }) =>
     $highlighted ? theme.colors.grayScale.black : theme.colors.grayScale.gy900};
+`;
+
+export const Badge = styled.span<{ $badge: string }>`
+  ${({ theme }) => theme.fonts.body.small400};
+  flex-shrink: 0;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid ${({ $badge, theme }) => badgeColors($badge, theme).border};
+  border-radius: 999px;
+  color: ${({ $badge, theme }) => badgeColors($badge, theme).text};
+  background-color: ${({ $badge, theme }) => badgeColors($badge, theme).background};
 `;
 
 export const Dot = styled(TocDotIcon)`

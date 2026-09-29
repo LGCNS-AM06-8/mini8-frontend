@@ -1,8 +1,32 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import AiGuideIcon from '@/assets/icons/ai-guide.svg?react';
+
+// 최초 진입시에만 적용
+const bounce = keyframes`
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.375rem);
+  }
+`;
+
+const ring = keyframes`
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+`;
 
 export const Container = styled.div`
   position: relative;
@@ -277,6 +301,7 @@ export const Content = styled.div`
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
+    margin: 1.25rem 0;
   }
 
   th,
@@ -295,6 +320,69 @@ export const Content = styled.div`
   td {
     ${({ theme }) => theme.fonts.body.small400};
     color: ${({ theme }) => theme.colors.grayScale.gy900};
+  }
+
+  tr:first-child th:first-child,
+  tr:first-child td:first-child {
+    border-top-left-radius: 0.75rem;
+  }
+
+  tr:first-child th:last-child,
+  tr:first-child td:last-child {
+    border-top-right-radius: 0.75rem;
+  }
+
+  tr:last-child td:first-child {
+    border-bottom-left-radius: 0.75rem;
+  }
+
+  tr:last-child td:last-child {
+    border-bottom-right-radius: 0.75rem;
+  }
+
+  [role='table'] {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 1.25rem 0;
+  }
+
+  [role='row'] {
+    display: table-row;
+  }
+
+  [role='cell'],
+  [role='columnheader'] {
+    display: table-cell;
+    ${({ theme }) => theme.fonts.body.small400};
+    color: ${({ theme }) => theme.colors.grayScale.gy900};
+    padding: 0.5rem 0.75rem;
+    border: 1px solid ${({ theme }) => theme.colors.grayScale.gy100};
+    word-break: break-word;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  [role='row']:first-child [role='cell'] {
+    ${({ theme }) => theme.fonts.body.medium400};
+    background-color: ${({ theme }) => theme.colors.violet.vt100};
+  }
+
+  [role='row']:first-child [role='cell']:first-child {
+    border-top-left-radius: 0.75rem;
+  }
+
+  [role='row']:first-child [role='cell']:last-child {
+    border-top-right-radius: 0.75rem;
+  }
+
+  [role='row']:last-child [role='cell']:first-child {
+    border-bottom-left-radius: 0.75rem;
+  }
+
+  [role='row']:last-child [role='cell']:last-child {
+    border-bottom-right-radius: 0.75rem;
   }
 `;
 
@@ -333,6 +421,17 @@ export const AiGuideToggle = styled.button`
   background-color: ${({ theme }) => theme.colors.violet.vt500};
   box-shadow: -2px 4px 16px 0 rgb(0 0 0 / 18%);
   cursor: pointer;
+  animation: ${bounce} 1s ease-in-out 3;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background-color: ${({ theme }) => theme.colors.violet.vt500};
+    animation: ${ring} 1s ease-out 3;
+  }
 `;
 
 export const AiGuideToggleIcon = styled(AiGuideIcon)`

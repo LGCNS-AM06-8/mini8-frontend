@@ -64,6 +64,11 @@ export default function AiGuideDrawer({
   };
 
   const focusSet = new Set(guideState.status === 'done' ? guideState.data.focusSections : []);
+  const badgeBySeq = new Map(
+    guideState.status === 'done'
+      ? guideState.data.sectionBadges.map(({ seq, badge }) => [seq, badge])
+      : [],
+  );
   const cardTexts =
     guideState.status === 'done'
       ? [guideState.data.section1Text, guideState.data.section2Text, guideState.data.section3Text]
@@ -111,12 +116,12 @@ export default function AiGuideDrawer({
                 order={section.seq}
                 title={section.heading}
                 highlighted={focusSet.has(section.seq)}
+                badge={badgeBySeq.get(section.seq)}
                 onClick={() => handleTocClick(section.seq)}
               />
             ))}
           </S.TocList>
         </S.ScrollArea>
-        <S.ScrollFade />
       </S.Drawer>
     </>
   );
