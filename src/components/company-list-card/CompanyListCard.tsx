@@ -18,7 +18,7 @@ export default function CompanyListCard({ company, interestSkills }: CompanyList
   return (
     // 관심 기술을 하나도 다루지 않은 기업은 목록에서 빼지 않고 연하게 그린다(명세: matchedSkillCount 0)
     <S.Card to={toCompany(String(companyId))} $dimmed={matchedSkillCount === 0}>
-      <S.Logo>{logoUrl && <img src={logoUrl} alt="" />}</S.Logo>
+      <S.Logo $hasLogo={Boolean(logoUrl)}>{logoUrl && <img src={logoUrl} alt="" />}</S.Logo>
       <S.Body>
         <S.TitleRow>
           <S.Name>{name}</S.Name>

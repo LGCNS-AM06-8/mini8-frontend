@@ -32,7 +32,8 @@ export const CompanyHeader = styled.div`
   gap: 1rem;
 `;
 
-export const Logo = styled.div`
+// $hasLogo: 로고가 있으면 배경을 비워 투명 로고 뒤로 회색이 비치지 않게 하고, 없을 때만 회색 빈 칸으로 둔다
+export const Logo = styled.div<{ $hasLogo: boolean }>`
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -41,7 +42,8 @@ export const Logo = styled.div`
   height: 3.75rem;
   overflow: hidden;
   border-radius: 1rem;
-  background-color: ${({ theme }) => theme.colors.grayScale.gy100};
+  background-color: ${({ theme, $hasLogo }) =>
+    $hasLogo ? 'transparent' : theme.colors.grayScale.gy100};
 
   img {
     width: 100%;
